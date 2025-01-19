@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import SearchForm from '../components/SearchForm';
 import Layout from '../components/layout/Layout';
-import DestinationSectionComponent from '../components/DestinationSection';
+import DestinationSection from '../components/DestinationSection';
+import OurDestinations from '../components/OurDestinations';
+import VideoIntro from '../components/VideoIntro';
+import ReasonsPetJet from '../components/ReasonsPetJet';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -137,7 +140,10 @@ const LandingPage = () => {
         </HeroFrame>
         <Navbar />
         <ContentWrapper>
-          <DestinationSectionComponent />
+          <DestinationSection />
+          <OurDestinations />
+          <VideoIntro />
+          <ReasonsPetJet />
         </ContentWrapper>
       </PageContainer>
     </Layout>
