@@ -1,0 +1,1 @@
+// For the "Welcome to our website!" chat widget 
