@@ -252,8 +252,7 @@ const PlanTripButton = styled.button`
   background: #EF674A;
   border-radius: 8px;
   border: none;
-  font-family: 'Satoshi';
-  font-weight: 700;
+  font-weight: 750;
   font-size: 16px;
   line-height: 22px;
   color: #FFFFFF;

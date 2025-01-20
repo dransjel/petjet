@@ -82,10 +82,9 @@ const CityIcon = styled.img`
 
 const CityName = styled.h3`
 color: #FFF;
-font-family: Satoshi;
 font-size: 24px;
 font-style: normal;
-font-weight: 500;
+font-weight: 700;
 line-height: normal;
   margin: 0;
   z-index: 2;

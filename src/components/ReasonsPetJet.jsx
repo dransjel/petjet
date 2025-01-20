@@ -26,11 +26,9 @@ const Header = styled.div`
 
 const Title = styled.h2`
   font-size: 48px;
-  color: ${colors.darkBlue};
-  
-  span {
-    color: ${colors.green};
-  }
+  color: ${colors.green};
+  font-weight: 700;
+
 `;
 
 const BookNowButton = styled.button` 
@@ -39,6 +37,7 @@ const BookNowButton = styled.button`
   padding: 16px 40px;
   border-radius: 8px;
   border: none;
+  font-weight: 700;
   font-size: 16px;
   cursor: pointer;
   transition: opacity 0.2s;
@@ -49,21 +48,30 @@ const BookNowButton = styled.button`
 `;
 
 const CardsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 290px);
-  gap: 40px;
-  margin-top: 48px;
+display: flex;
+padding: 50px 205px;
+justify-content: center;
+align-items: flex-start;
+align-content: flex-start;
+gap: 48px 80px;
+align-self: stretch;
+flex-wrap: wrap;
+
 `;
 
 const Card = styled.div`
-  background: white;
+display: flex;
+width: 350px;
+height: 280px;
+padding: 40px 24px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 20px;
+
   border-radius: 40px;
-  padding: 40px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
+background: var(--Text-Color-Dark-BG, #FFF);
+box-shadow: 0px 4px 24px 0px rgba(145, 84, 6, 0.09);
 `;
 
 const IconWrapper = styled.div`
@@ -81,9 +89,12 @@ const CardTitle = styled.h3`
 `;
 
 const CardDescription = styled.p`
-  font-size: 16px;
-  color: ${colors.gray};
-  line-height: 1.5;
+color: var(--Body-1, #5F5F5F);
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
 `;
 
 const ReasonsPetJet = () => {
@@ -118,7 +129,7 @@ const ReasonsPetJet = () => {
   return (
     <Section>
       <Header>
-        <Title>Why <span>Choose</span> Pet Jet Express</Title>
+        <Title>Why Choose Pet Jet Express</Title>
         <BookNowButton>Book Now</BookNowButton>
       </Header>
       
