@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { devices } from '../styles/breakpoints';
 import Navbar from '../components/Navbar';
 import SearchForm from '../components/SearchForm';
-import Layout from '../components/layout/layout';
+import Layout from '../components/layout/Layout';
 import DestinationSection from '../components/DestinationSection';
 import OurDestinations from '../components/OurDestinations';
 import VideoIntro from '../components/VideoIntro';
