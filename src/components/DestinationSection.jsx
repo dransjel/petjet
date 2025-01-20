@@ -5,6 +5,7 @@ import calendar from '../assets/images/calendar.png';
 import airplane from '../assets/images/airplane.svg';
 import destination from '../assets/images/Destination.png';
 import searchIcon from '../assets/images/search-normal.svg';
+import { devices } from '../styles/breakpoints';
 
 const Section = styled.section`
   display: flex;
@@ -12,6 +13,10 @@ const Section = styled.section`
   align-items: center;
   padding: 120px;
   background: #FFFFFF;
+
+  ${devices.mobile} {
+    padding: 40px 20px;
+  }
 `;
 
 const Title = styled.div`
@@ -42,6 +47,13 @@ const MainTitleContainer = styled.h2`
   margin: 0;
   display: flex;
   gap: 8px;
+
+  ${devices.mobile} {
+    font-size: 32px;
+    line-height: 38px;
+    flex-direction: column;
+    gap: 4px;
+  }
 `;
 
 const GreenText = styled.span`
@@ -59,6 +71,13 @@ const SearchForm = styled.div`
   gap: 24px;
   width: 1200px;
   margin-bottom: 48px;
+
+  ${devices.mobile} {
+    width: 100%;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
 `;
 
 const InputGroup = styled.div`
@@ -146,10 +165,19 @@ const SearchButton = styled.button`
   &:hover {
     background: #e85835;
   }
+
+  ${devices.mobile} {
+    align-self: stretch;
+    width: 100%;
+  }
 `;
 
 const FlightsSection = styled.div`
   width: 1200px;
+
+  ${devices.mobile} {
+    width: 100%;
+  }
 `;
 
 const FlightsTitle = styled.h3`
@@ -165,6 +193,11 @@ const FlightCards = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
+
+  ${devices.mobile} {
+    flex-direction: column;
+    gap: 16px;
+  }
 `;
 
 const FlightCard = styled.div`
@@ -173,6 +206,11 @@ const FlightCard = styled.div`
   border: 1px solid #E7E7E7;
   border-radius: 4px;
   box-sizing: border-box;
+
+  ${devices.mobile} {
+    width: 100%;
+    padding: 16px;
+  }
 `;
 
 const FlightInfo = styled.div`
@@ -235,6 +273,14 @@ const FlightPath = styled.div`
     right: -20px;
     z-index: 1;
   }
+
+  ${devices.mobile} {
+    margin: 0 12px;
+    
+    .airplane {
+      margin-left: -150px;
+    }
+  }
 `;
 
 const FlightDetails = styled.div`
@@ -245,6 +291,11 @@ const FlightDetails = styled.div`
   font-size: 14px;
   line-height: 17px;
   color: #5F5F5F;
+
+  ${devices.mobile} {
+    flex-direction: column;
+    gap: 4px;
+  }
 `;
 
 const PlanTripButton = styled.button`
@@ -261,6 +312,11 @@ const PlanTripButton = styled.button`
   display: block;
   margin-left: auto;
   margin-right: auto;
+
+  ${devices.mobile} {
+    width: 100%;
+    margin-top: 32px;
+  }
 `;
 
 const CalendarDropdown = styled(DropdownMenu)`
