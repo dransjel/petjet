@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import videoThumbnail from '../assets/images/video-thumbnail.jpg';
-import playIcon from '../assets/icons/Play.svg';
+import playIcon from '../assets/icons/play.svg';
 
 const Section = styled.section`
   width: 100%;
