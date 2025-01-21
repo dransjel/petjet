@@ -9,6 +9,8 @@ import OurDestinations from '../components/OurDestinations';
 import VideoIntro from '../components/VideoIntro';
 import ReasonsPetJet from '../components/ReasonsPetJet';
 import heroMobile from '../assets/images/hero-dog-mobile.png';
+import InstaPitch from '../components/InstaPitch';
+import { useNavigate } from 'react-router-dom';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -51,6 +53,7 @@ const HeroBanner = styled.div`
   background-image: url(${props => props.$backgroundImage});
   background-size: cover;
   background-position: center;
+  pointer-events: none;
 
   ${devices.mobile} {
     display: none;
@@ -93,7 +96,7 @@ const SectionText = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
-  z-index: 1;
+  z-index: 2;
 
   ${devices.mobile} {
     position: static;
@@ -171,6 +174,8 @@ const BookNowButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   padding: 16px 41.5px;
+  z-index: 3;
+  position: relative;
 
   ${devices.mobile} {
     margin-top: 20px;
@@ -196,11 +201,17 @@ const ContentWrapper = styled.div`
 `;
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
+  const handleBookNow = () => {
+    navigate('/booking');
+  };
+
   return (
     <Layout>
       <PageContainer>
+        <Navbar />
         <HeroFrame>
-          <HeroBanner $backgroundImage="/src/assets/images/hero-dog.jpg" />
           <SectionText>
             <TextFrame>
               <MainHeadline>Family Flies Together</MainHeadline>
@@ -210,15 +221,16 @@ const LandingPage = () => {
               </Paragraph>
             </TextFrame>
             <MobileHeroImage />
-            <BookNowButton>Book Now</BookNowButton>
+            <BookNowButton onClick={handleBookNow}>Book Now</BookNowButton>
           </SectionText>
+          <HeroBanner $backgroundImage="/src/assets/images/hero-dog.jpg" />
         </HeroFrame>
-        <Navbar />
         <ContentWrapper>
           <DestinationSection />
           <OurDestinations />
           <VideoIntro />
           <ReasonsPetJet />
+          <InstaPitch />
         </ContentWrapper>
       </PageContainer>
     </Layout>

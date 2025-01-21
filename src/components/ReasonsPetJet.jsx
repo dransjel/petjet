@@ -43,8 +43,8 @@ const Title = styled.h2`
   font-weight: 700;
   margin: 0;
 
-  span {
-    color: ${colors.green};
+  .highlight {
+    color: #55AD8B;
   }
 
   @media (max-width: 768px) {
@@ -187,7 +187,10 @@ const ReasonsPetJet = () => {
   return (
     <Section>
       <Header>
-        <Title>Why Choose Pet Jet Express</Title>
+        <Title>
+          Why <span className="highlight">Choose</span><br />
+          Pet Jet Express
+        </Title>
         <BookNowButton>Book Now</BookNowButton>
       </Header>
       
