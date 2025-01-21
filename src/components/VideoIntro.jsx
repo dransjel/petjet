@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import videoThumbnail from '../assets/images/video-thumbnail.jpg';
+import playIcon from '../assets/icons/Play.svg';
 
 const Section = styled.section`
   width: 100%;
@@ -9,25 +10,47 @@ const Section = styled.section`
   align-items: center;
   padding: 100px 0;
   gap: 32px;
+  background: #FFFFFF;
+
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 60px 20px;
+  }
 `;
 
 const Title = styled.h2`
-  width: 535px;
-  height: 58px;
-font-family: Lato;
-font-size: 48px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
-  text-align: center;
+  display: flex;
+  gap: 12px;
   margin: 0;
+  text-align: center;
 
-  span.company {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .company {
     color: #00252E;
+    font-size: 48px;
+    font-family: Lato;
+    font-weight: 700;
+    word-wrap: break-word;
+
+    @media (max-width: 768px) {
+      font-size: 32px;
+    }
   }
   
-  span.highlight {
-    color: #56AC8A;
+  .highlight {
+    color: #52AD8A;
+    font-size: 48px;
+    font-family: Lato;
+    font-weight: 700;
+    word-wrap: break-word;
+
+    @media (max-width: 768px) {
+      font-size: 32px;
+    }
   }
 `;
 
@@ -38,6 +61,12 @@ const VideoContainer = styled.div`
   border-radius: 40px;
   overflow: hidden;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 200px;
+    border-radius: 24px;
+  }
 `;
 
 const VideoThumbnail = styled.img`
@@ -69,11 +98,7 @@ const PlayButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
-  img {
-    width: 24px;
-    height: 24px;
-  }
+  padding: 0;
 `;
 
 const VideoIntro = () => {
@@ -85,12 +110,16 @@ const VideoIntro = () => {
   return (
     <Section>
       <Title>
-        <span className="company">Pet Jet Express</span>{' '}
+        <span className="company">Pet Jet Express</span>
         <span className="highlight">Takes Off</span>
       </Title>
       
       <VideoContainer onClick={handlePlayVideo}>
         <VideoThumbnail src={videoThumbnail} alt="Video thumbnail" />
+        <Overlay />
+        <PlayButton>
+          <img src={playIcon} alt="Play video" />
+        </PlayButton>
       </VideoContainer>
     </Section>
   );

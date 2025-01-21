@@ -275,10 +275,14 @@ const FlightPath = styled.div`
   }
 
   ${devices.mobile} {
-    margin: 0 12px;
+    margin: 0 24px;
     
     .airplane {
       margin-left: -150px;
+    }
+
+    .destination {
+      right: -15px;
     }
   }
 `;
@@ -322,6 +326,17 @@ const PlanTripButton = styled.button`
 const CalendarDropdown = styled(DropdownMenu)`
   padding: 16px;
   width: 300px;
+
+  ${devices.mobile} {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 300px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+  }
 `;
 
 const Calendar = styled.div`
@@ -367,6 +382,21 @@ const Calendar = styled.div`
   }
 `;
 
+const Overlay = styled.div`
+  display: none;
+  
+  ${devices.mobile} {
+    display: ${props => props.show ? 'block' : 'none'};
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+`;
+
 const DestinationSection = () => {
   const [fromDropdown, setFromDropdown] = useState(false);
   const [toDropdown, setToDropdown] = useState(false);
@@ -395,6 +425,8 @@ const DestinationSection = () => {
 
   return (
     <Section>
+      <Overlay show={calendarOpen} onClick={() => setCalendarOpen(false)} />
+      
       <Title>
         <SubTitle>Flight Check</SubTitle>
         <MainTitleContainer>
