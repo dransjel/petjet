@@ -80,11 +80,35 @@ const SearchForm = styled.div`
   }
 `;
 
+const LocationGroup = styled.div`
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  @media (min-width: 769px) {
+    display: contents; // This will make it behave as if the wrapper doesn't exist on desktop
+  }
+
+  ${devices.mobile} {
+    flex-direction: row;
+    gap: 12px;
+  }
+`;
+
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
   flex: 1;
+
+  @media (min-width: 769px) {
+    width: 384px; // Fixed width for desktop
+  }
+
+  ${devices.mobile} {
+    flex: 1;
+    width: auto;
+  }
 `;
 
 const Label = styled.label`
@@ -97,27 +121,29 @@ const Label = styled.label`
 
 const InputWrapper = styled.div`
   position: relative;
+  width: 100%;
 `;
 
 const Input = styled.div`
+  width: 100%;
+  height: 56px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #E5E5E5;
+  background: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
-  border: 1px solid #C7C7C7;
-  border-radius: 4px;
+  cursor: pointer;
   
   span {
-    font-family: 'Satoshi', sans-serif;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 20px;
-    color: #B5B5B5;
+    color: #5F5F5F;
+    font-size: 16px;
   }
 
   img {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -436,49 +462,51 @@ const DestinationSection = () => {
       </Title>
       
       <SearchForm>
-        <InputGroup>
-          <Label>From</Label>
-          <InputWrapper>
-            <Input onClick={() => setFromDropdown(!fromDropdown)}>
-              <span>{fromLocation || 'Choose location'}</span>
-              <img src={arrowDown} alt="Select location" />
-            </Input>
-            {fromDropdown && (
-              <DropdownMenu>
-                {locations.map((location) => (
-                  <DropdownItem
-                    key={location}
-                    onClick={() => handleLocationSelect(location, true)}
-                  >
-                    {location}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            )}
-          </InputWrapper>
-        </InputGroup>
-        
-        <InputGroup>
-          <Label>To</Label>
-          <InputWrapper>
-            <Input onClick={() => setToDropdown(!toDropdown)}>
-              <span>{toLocation || 'Choose location'}</span>
-              <img src={arrowDown} alt="Select location" />
-            </Input>
-            {toDropdown && (
-              <DropdownMenu>
-                {locations.map((location) => (
-                  <DropdownItem
-                    key={location}
-                    onClick={() => handleLocationSelect(location, false)}
-                  >
-                    {location}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            )}
-          </InputWrapper>
-        </InputGroup>
+        <LocationGroup>
+          <InputGroup>
+            <Label>From</Label>
+            <InputWrapper>
+              <Input onClick={() => setFromDropdown(!fromDropdown)}>
+                <span>{fromLocation || 'Choose location'}</span>
+                <img src={arrowDown} alt="Select location" />
+              </Input>
+              {fromDropdown && (
+                <DropdownMenu>
+                  {locations.map((location) => (
+                    <DropdownItem
+                      key={location}
+                      onClick={() => handleLocationSelect(location, true)}
+                    >
+                      {location}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              )}
+            </InputWrapper>
+          </InputGroup>
+          
+          <InputGroup>
+            <Label>To</Label>
+            <InputWrapper>
+              <Input onClick={() => setToDropdown(!toDropdown)}>
+                <span>{toLocation || 'Choose location'}</span>
+                <img src={arrowDown} alt="Select location" />
+              </Input>
+              {toDropdown && (
+                <DropdownMenu>
+                  {locations.map((location) => (
+                    <DropdownItem
+                      key={location}
+                      onClick={() => handleLocationSelect(location, false)}
+                    >
+                      {location}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              )}
+            </InputWrapper>
+          </InputGroup>
+        </LocationGroup>
         
         <InputGroup>
           <Label>Date</Label>

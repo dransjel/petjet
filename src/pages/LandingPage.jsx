@@ -16,6 +16,7 @@ const PageContainer = styled.div`
   width: 100%;
   overflow-x: hidden;
   position: relative;
+  background: white;
   
   ${devices.mobile} {
     max-width: 100vw;
@@ -27,11 +28,9 @@ const HeroFrame = styled.div`
   width: 100%;
   height: 800px;
   background: rgb(9, 68, 84);
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   overflow: hidden;
-  z-index: 0;
+  margin-bottom: -800px;
 
   ${devices.mobile} {
     height: 93vh;
@@ -41,6 +40,7 @@ const HeroFrame = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 0;
   }
 `;
 
@@ -193,10 +193,11 @@ const SearchSection = styled.section`
 const ContentWrapper = styled.div`
   position: relative;
   z-index: 1;
-  padding-top: 800px;
+  margin-top: 800px;
+  background: white;
 
   ${devices.mobile} {
-    padding-top: 0;
+    margin-top: 0;
   }
 `;
 
@@ -212,6 +213,7 @@ const LandingPage = () => {
       <PageContainer>
         <Navbar />
         <HeroFrame>
+          <HeroBanner $backgroundImage="/src/assets/images/hero-dog.jpg" />
           <SectionText>
             <TextFrame>
               <MainHeadline>Family Flies Together</MainHeadline>
@@ -223,7 +225,6 @@ const LandingPage = () => {
             <MobileHeroImage />
             <BookNowButton onClick={handleBookNow}>Book Now</BookNowButton>
           </SectionText>
-          <HeroBanner $backgroundImage="/src/assets/images/hero-dog.jpg" />
         </HeroFrame>
         <ContentWrapper>
           <DestinationSection />

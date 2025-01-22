@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { devices } from '../styles/breakpoints';
 import logo from '../assets/images/logo.svg';
 import menuIcon from '../assets/icons/menu.svg';
 
-const Nav = styled.nav`
+const NavContainer = styled.nav`
   width: 100%;
   height: 102px;
   display: flex;
@@ -15,13 +16,11 @@ const Nav = styled.nav`
   top: 0;
   left: 0;
   z-index: 10;
-  box-sizing: border-box;
+  background: ${props => props.$isBookingPage ? '#094454' : 'transparent'};
 
   ${devices.mobile} {
     padding: 0 20px;
-    height: 72px;
-    width: 100vw;
-    max-width: 100%;
+    height: 80px;
   }
 `;
 
@@ -62,6 +61,7 @@ const LogoContainer = styled.div`
   color: white;
   font-size: 24px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 const Logo = styled.img`
@@ -135,27 +135,22 @@ const DesktopBookNow = styled(BookNowButton)`
   }
 `;
 
-const MobileNavComponent = () => {
+const Navbar = ({ isBookingPage = false }) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  return (
-    <MobileNav>
-      <MenuIcon onClick={() => setIsMenuOpen(!isMenuOpen)}>
-        <img src={menuIcon} alt="Menu" />
-      </MenuIcon>
-      <MobileMenu $isOpen={isMenuOpen}>
-        <span>FAQs</span>
-        <span>Contact Us</span>
-        <BookNowButton>Book Now</BookNowButton>
-      </MobileMenu>
-    </MobileNav>
-  );
-};
+  const handleLogoClick = () => {
+    navigate('/');
+  };
 
-const Navbar = () => {
+  const handleBookNow = () => {
+    navigate('/booking');
+    setIsMenuOpen(false); // Close mobile menu if open
+  };
+
   return (
-    <Nav>
-      <LogoContainer>
+    <NavContainer $isBookingPage={isBookingPage}>
+      <LogoContainer onClick={handleLogoClick}>
         <Logo src={logo} alt="Pet Jet Express" />
       </LogoContainer>
 
@@ -166,10 +161,19 @@ const Navbar = () => {
         </NavLinks>
       </DesktopNav>
 
-      <DesktopBookNow>Book Now</DesktopBookNow>
+      <DesktopBookNow onClick={handleBookNow}>Book Now</DesktopBookNow>
 
-      <MobileNavComponent />
-    </Nav>
+      <MobileNav>
+        <MenuIcon onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <img src={menuIcon} alt="Menu" />
+        </MenuIcon>
+        <MobileMenu $isOpen={isMenuOpen}>
+          <span>FAQs</span>
+          <span>Contact Us</span>
+          <BookNowButton onClick={handleBookNow}>Book Now</BookNowButton>
+        </MobileMenu>
+      </MobileNav>
+    </NavContainer>
   );
 };
 
