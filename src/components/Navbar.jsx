@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { devices } from '../styles/breakpoints';
 import logo from '../assets/images/logo.svg';
+import logoBottom from '../assets/icons/logo_bottom.svg';
 import menuIcon from '../assets/icons/menu.svg';
+import menuBlackIcon from '../assets/icons/menu_black.svg';
 
 const NavContainer = styled.nav`
   width: 100%;
@@ -39,10 +41,25 @@ const DesktopNav = styled.div`
 const NavLinks = styled.div`
   display: flex;
   gap: 45px;
-  color: white;
+  color: ${props => props.$isOnFAQ ? 'rgb(0, 37, 46)' : 'white'};
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
+
+  span {
+    &.clickable {
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.5;
+    }
+  }
 `;
 
 const BookNowButton = styled.button`
@@ -98,7 +115,7 @@ const MenuIcon = styled.button`
   img {
     width: 24px;
     height: 24px;
-    filter: brightness(0) invert(1);
+    
   }
 `;
 
@@ -121,11 +138,19 @@ const MobileMenu = styled.div`
     color: white;
     font-size: 16px;
     font-weight: 500;
-  }
 
-  ${BookNowButton} {
-    width: 100%;
-    margin-top: 10px;
+    &.clickable {
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.5;
+    }
   }
 `;
 
@@ -135,42 +160,40 @@ const DesktopBookNow = styled(BookNowButton)`
   }
 `;
 
-const Navbar = ({ isBookingPage = false }) => {
-  const navigate = useNavigate();
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  const handleLogoClick = () => {
-    navigate('/');
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isOnFAQ = location.pathname === '/faq';
 
-  const handleBookNow = () => {
-    navigate('/booking');
-    setIsMenuOpen(false); // Close mobile menu if open
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsMenuOpen(false);
   };
 
   return (
-    <NavContainer $isBookingPage={isBookingPage}>
-      <LogoContainer onClick={handleLogoClick}>
-        <Logo src={logo} alt="Pet Jet Express" />
+    <NavContainer $isBookingPage={location.pathname === '/booking'}>
+      <LogoContainer onClick={() => handleNavigation('/')}>
+        <Logo src={isOnFAQ ? logoBottom : logo} alt="Pet Jet Express" />
       </LogoContainer>
 
       <DesktopNav>
-        <NavLinks>
-          <span>FAQs</span>
-          <span>Contact Us</span>
+        <NavLinks $isOnFAQ={isOnFAQ}>
+          <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
+          <span className="disabled">Contact Us</span>
         </NavLinks>
       </DesktopNav>
 
-      <DesktopBookNow onClick={handleBookNow}>Book Now</DesktopBookNow>
+      <DesktopBookNow onClick={() => handleNavigation('/booking')}>Book Now</DesktopBookNow>
 
       <MobileNav>
         <MenuIcon onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <img src={menuIcon} alt="Menu" />
+          <img src={isOnFAQ ? menuBlackIcon : menuIcon} alt="Menu" />
         </MenuIcon>
         <MobileMenu $isOpen={isMenuOpen}>
-          <span>FAQs</span>
-          <span>Contact Us</span>
-          <BookNowButton onClick={handleBookNow}>Book Now</BookNowButton>
+          <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
+          <span className="disabled">Contact Us</span>
+          <BookNowButton onClick={() => handleNavigation('/booking')}>Book Now</BookNowButton>
         </MobileMenu>
       </MobileNav>
     </NavContainer>
