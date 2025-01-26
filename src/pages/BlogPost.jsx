@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { devices } from '../styles/breakpoints';
 import Layout from '../components/layout/Layout';
 import Navbar from '../components/Navbar';
 import BookingBanner from '../components/BookingBanner';
-import NewsHero from '../components/NewsHero';
+import newsDog from '../assets/images/News_dog.png';
+import heroMobile from '../assets/images/mobile_News_Dog.png';
 
 const PageContainer = styled.div`
   width: 100vw;
@@ -15,13 +16,136 @@ const PageContainer = styled.div`
   background: white;
 `;
 
-const BlogContent = styled.div`
+// Hero Section Styles
+const HeroFrame = styled.div`
+  width: 100%;
+  height: 800px;
+  background: #9ED0DF;
   position: relative;
-  z-index: 1;
-  padding-top: 100px;
+  overflow: hidden;
+
+  ${devices.mobile} {
+    height: 93vh;
+  }
+`;
+
+const HeroBanner = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40%;
+  height: 100%;
+  background-image: url(${props => props.$backgroundImage});
+  background-size: cover;
+  background-position: center;
+  border-radius: 24px 0 0 24px;
+  margin-right: -1px;
+
+  ${devices.mobile} {
+    display: none;
+  }
+`;
+
+const SectionText = styled.div`
+  position: absolute;
+  left: 100px;
+  top: 273px;
+  width: 515px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  z-index: 2;
+
+  ${devices.mobile} {
+    position: static;
+    width: 100%;
+    padding: 0 20px;
+    text-align: center;
+    align-items: center;
+    margin-top: 120px;
+    box-sizing: border-box;
+  }
+`;
+
+const TextFrame = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const MainHeadline = styled.h1`
+  color: rgb(0, 37, 46);
+  font-family: 'Lato', sans-serif;
+  font-size: 48px;
+  line-height: 58px;
+  font-weight: 900;
+  margin: 0;
+
+  ${devices.mobile} {
+    font-size: 36px;
+    line-height: 43px;
+  }
+`;
+
+const Paragraph = styled.p`
+  color: rgb(33, 39, 42);
+  font-size: 18px;
+  line-height: 27px;
+  margin: 0;
+  max-width: 515px;
+  white-space: pre-line;
+
+  ${devices.mobile} {
+    font-size: 16px;
+    line-height: 24px;
+    max-width: 335px;
+  }
+`;
+
+const NewsHeroImage = styled.div`
+  display: none;
+  
+  ${devices.mobile} {
+    display: block;
+    width: 100%;
+    max-width: 382px;
+    height: 340px;
+    margin: 0 auto;
+    background-image: url(${heroMobile});
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: 10px;
+  }
+`;
+
+const CallbackButton = styled.button`
+  width: fit-content;
+  height: 54px;
+  background: rgb(239, 103, 74);
+  color: white;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 16px 28px;
+`;
+
+// Blog Content Styles
+const ContentWrapper = styled.div`
+  position: relative;
+  background: white;
+  width: 100%;
+`;
+
+const BlogContent = styled.div`
   max-width: 800px;
   margin: 80px auto;
   padding: 0 20px;
+
+  ${devices.mobile} {
+    margin: 40px auto;
+  }
 `;
 
 const BlogImage = styled.img`
@@ -30,6 +154,10 @@ const BlogImage = styled.img`
   object-fit: cover;
   border-radius: 24px;
   margin-bottom: 40px;
+
+  ${devices.mobile} {
+    height: 300px;
+  }
 `;
 
 const BlogTitle = styled.h1`
@@ -69,10 +197,15 @@ const BlogText = styled.div`
     margin-bottom: 20px;
     padding-left: 20px;
   }
+
+  ${devices.mobile} {
+    font-size: 16px;
+  }
 `;
 
 const BlogPost = () => {
   const { link } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -101,6 +234,10 @@ const BlogPost = () => {
     fetchPost();
   }, [link]);
 
+  const handleCallbackClick = () => {
+    navigate('/contact');
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (!post) return <div>Post not found</div>;
 
@@ -108,14 +245,32 @@ const BlogPost = () => {
     <Layout>
       <PageContainer>
         <Navbar />
-        <NewsHero />
-        <BlogContent>
-          <BlogImage src={post.image} alt={post.title} />
-          <BlogTitle>{post.title}</BlogTitle>
-          <BlogDate>{post.date}</BlogDate>
-          <BlogText dangerouslySetInnerHTML={{ __html: post.content }} />
-        </BlogContent>
-        <BookingBanner />
+        <HeroFrame>
+          <HeroBanner $backgroundImage={newsDog} />
+          <SectionText>
+            <TextFrame>
+              <MainHeadline>Latest News</MainHeadline>
+              <Paragraph>
+                Stay updated with the latest news and updates from PetJet Express.
+                {'\n\n'}
+                Read all about it ..
+              </Paragraph>
+            </TextFrame>
+            <NewsHeroImage />
+            <CallbackButton onClick={handleCallbackClick}>
+              Let's Discuss
+            </CallbackButton>
+          </SectionText>
+        </HeroFrame>
+        <ContentWrapper>
+          <BlogContent>
+            <BlogImage src={post.image} alt={post.title} />
+            <BlogTitle>{post.title}</BlogTitle>
+            <BlogDate>{post.date}</BlogDate>
+            <BlogText dangerouslySetInnerHTML={{ __html: post.content }} />
+          </BlogContent>
+          <BookingBanner />
+        </ContentWrapper>
       </PageContainer>
     </Layout>
   );
