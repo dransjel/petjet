@@ -95,6 +95,7 @@ const Footer = () => {
     <FooterContainer>
       <NavLinks>
         <NavLink href="/faq">FAQ's</NavLink>
+        <NavLink href="/news">News</NavLink>
         <NavLink href="/contact">Contact Us</NavLink>
       </NavLinks>
 

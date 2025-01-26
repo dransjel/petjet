@@ -106,8 +106,8 @@ const FAQSection = () => {
   const categoryMap = {
     3: 'Process',
     4: 'Pricing',
-    5: 'Pet-related',
-    6: 'Bookings',
+    5: 'Pet Related',
+    6: 'Flight Related',
     7: 'Safety Measures',
     8: 'Facilities'
   };
@@ -115,7 +115,7 @@ const FAQSection = () => {
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
-        const response = await fetch('http://wordpress.grysolle.com/wp-json/wp/v2/faqs');
+        const response = await fetch('http://wordpress.grysolle.com/wp-json/wp/v2/faqs?per_page=100');
         if (!response.ok) {
           throw new Error('Failed to fetch FAQs');
         }

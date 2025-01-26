@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import arrowDown from '../assets/images/arrow-down.png';
 import calendar from '../assets/images/calendar.png';
@@ -6,8 +6,12 @@ import airplane from '../assets/images/airplane.svg';
 import destination from '../assets/images/Destination.png';
 import searchIcon from '../assets/images/search-normal.svg';
 import { devices } from '../styles/breakpoints';
+import Portal from './Portal';
+import BookingPopup from './BookingPopup';
 
 const Section = styled.section`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -232,6 +236,15 @@ const FlightCard = styled.div`
   border: 1px solid #E7E7E7;
   border-radius: 4px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: #EF674A;
+  }
 
   ${devices.mobile} {
     width: 100%;
@@ -241,9 +254,15 @@ const FlightCard = styled.div`
 
 const FlightInfo = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+
+const FlightRow = styled.div`
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
 `;
 
 const TimeLocation = styled.div`
@@ -252,10 +271,28 @@ const TimeLocation = styled.div`
   gap: 8px;
 `;
 
-const Time = styled.span`
+const Date = styled.div`
+  font-family: 'Lato';
+  font-size: 24px;
+  line-height: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const Day = styled.div`
   font-family: 'Lato';
   font-weight: 700;
   font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+`;
+
+
+const Time = styled.span`
+  font-family: 'Lato';
+  font-weight: 700;
+  font-size: 18px;
   line-height: 24px;
   color: #000000;
 `;
@@ -289,7 +326,7 @@ const FlightPath = styled.div`
     height: 20px;
     position: relative;
     z-index: 1;
-    margin-left: -400px;
+    margin-left: -350px;
   }
 
   .destination {
@@ -323,8 +360,9 @@ const FlightDetails = styled.div`
   color: #5F5F5F;
 
   ${devices.mobile} {
-    flex-direction: column;
+    flex-direction: row;
     gap: 4px;
+    justify-content: space-between;
   }
 `;
 
@@ -368,43 +406,43 @@ const CalendarDropdown = styled(DropdownMenu)`
 const Calendar = styled.div`
   .calendar-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 16px;
     font-family: 'Satoshi', sans-serif;
     font-weight: 500;
     color: #00252E;
   }
 
-  .calendar-grid {
+  .month-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
     text-align: center;
   }
 
-  .day {
-    padding: 8px;
+  .month {
+    padding: 12px;
     font-family: 'Satoshi', sans-serif;
     font-size: 14px;
     color: #B5B5B5;
     cursor: not-allowed;
-  }
-
-  .available {
-    color: #00252E;
-    cursor: pointer;
-    font-weight: 500;
-    
-    &:hover {
-      background: #F5F5F5;
-      border-radius: 4px;
-    }
-  }
-
-  .selected {
-    background: #EF674A;
-    color: white;
     border-radius: 4px;
+
+    &.available {
+      color: #00252E;
+      cursor: pointer;
+      font-weight: 500;
+      
+      &:hover {
+        background: #F5F5F5;
+      }
+    }
+
+    &.selected {
+      background: #EF674A;
+      color: white;
+    }
   }
 `;
 
@@ -423,30 +461,208 @@ const Overlay = styled.div`
   }
 `;
 
+const BookFlightButton = styled.button`
+  padding: 16px 28px;
+  background: #EF674A;
+  border-radius: 8px;
+  border: none;
+  font-weight: 750;
+  font-size: 16px;
+  line-height: 22px;
+  color: #FFFFFF;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
+  display: ${props => props.show ? 'block' : 'none'};
+  
+  &:hover {
+    background: #e85835;
+  }
+`;
+
 const DestinationSection = () => {
   const [fromDropdown, setFromDropdown] = useState(false);
   const [toDropdown, setToDropdown] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [fromLocation, setFromLocation] = useState('');
   const [toLocation, setToLocation] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [currentYear, setCurrentYear] = useState(2025);
+  const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [displayCount, setDisplayCount] = useState(4);
+  const [selectedFlightId, setSelectedFlightId] = useState(null);
+  const [showBookingPopup, setShowBookingPopup] = useState(false);
+  const [selectedFlight, setSelectedFlight] = useState(null);
 
   const locations = ['London', 'Dubai', 'New York'];
-  const availableDate = '7 March 2025';
+  const availableMonths = ['March', 'April', 'May', 'June'];
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const isMonthAvailable = (month) => {
+    return availableMonths.includes(month);
+  };
+
+  const getToLocations = (fromLocation) => {
+    switch(fromLocation) {
+      case 'Dubai':
+        return ['London'];
+      case 'New York':
+        return ['London'];
+      case 'London':
+        return ['Dubai', 'New York'];
+      default:
+        return ['London', 'Dubai', 'New York'];
+    }
+  };
 
   const handleLocationSelect = (location, isFrom) => {
     if (isFrom) {
       setFromLocation(location);
       setFromDropdown(false);
+      
+      // Auto-clear 'to' location when 'from' changes
+      setToLocation('');
+      
+      // If Dubai or New York is selected, automatically set London as destination
+      if (location === 'Dubai' || location === 'New York') {
+        setToLocation('London');
+      }
     } else {
       setToLocation(location);
       setToDropdown(false);
     }
   };
 
-  const handleDateSelect = () => {
-    setSelectedDate(availableDate);
+  const handleMonthSelect = (month) => {
+    if (isMonthAvailable(month)) {
+      setSelectedMonth(`${month} ${currentYear}`);
+      setCalendarOpen(false);
+    }
+  };
+
+  const handleYearChange = (increment) => {
+    setCurrentYear(prev => prev + increment);
+  };
+
+  const resetFilters = () => {
+    setFromLocation('');
+    setToLocation('');
+    setSelectedMonth('');
+    setFromDropdown(false);
+    setToDropdown(false);
     setCalendarOpen(false);
+    setDisplayCount(4); // Reset the number of displayed flights
+  };
+
+  useEffect(() => {
+    fetchFlights();
+  }, []);
+
+  const fetchFlights = async () => {
+    try {
+      const response = await fetch('http://wordpress.grysolle.com/wp-json/wp/v2/flights?per_page=100', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        console.error('Response status:', response.status);
+        console.error('Response statusText:', response.statusText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Fetched flights:', data); // Debug log
+      setFlights(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error details:', error); // Detailed error logging
+      setError(`Failed to fetch flights: ${error.message}`);
+      setLoading(false);
+    }
+  };
+
+  // Filter and sort flights
+  const filteredFlights = flights
+    .filter(flight => {
+      // Filter by month if selected
+      if (selectedMonth && flight.acf.month !== selectedMonth.split(' ')[0]) {
+        return false;
+      }
+
+      // Filter by from location if selected
+      if (fromLocation && flight.acf.from_destination !== fromLocation) {
+        return false;
+      }
+
+      // Filter by to location if selected
+      if (toLocation && flight.acf.to_destination !== toLocation) {
+        return false;
+      }
+
+      return true;
+    })
+    .sort((a, b) => {
+      try {
+        const monthOrder = {
+          'January': 1, 'February': 2, 'March': 3, 'April': 4,
+          'May': 5, 'June': 6, 'July': 7, 'August': 8,
+          'September': 9, 'October': 10, 'November': 11, 'December': 12
+        };
+
+        const parseDate = (dateStr) => {
+          const [day, month, year] = dateStr.replace(',', '').split(' ');
+          return {
+            day: parseInt(day),
+            month: monthOrder[month],
+            year: parseInt(year)
+          };
+        };
+
+        const dateA = parseDate(a.acf.date);
+        const dateB = parseDate(b.acf.date);
+
+        if (dateA.year !== dateB.year) return dateA.year - dateB.year;
+        if (dateA.month !== dateB.month) return dateA.month - dateB.month;
+        return dateA.day - dateB.day;
+      } catch (error) {
+        console.error('Error sorting dates:', error, 'for dates:', a.acf.date, b.acf.date);
+        return 0;
+      }
+    });
+
+  const displayedFlights = filteredFlights.slice(0, displayCount);
+  const hasMoreFlights = filteredFlights.length > displayCount;
+
+  const handleShowMore = () => {
+    setDisplayCount(prevCount => prevCount + 4);
+  };
+
+  const handleFlightClick = (flightId) => {
+    setSelectedFlightId(selectedFlightId === flightId ? null : flightId);
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(price);
+  };
+
+  const handleBooking = (flight, e) => {
+    e.preventDefault(); // Prevent any default behavior
+    e.stopPropagation(); // Stop event bubbling
+    setSelectedFlight(flight);
+    setShowBookingPopup(true);
   };
 
   return (
@@ -472,7 +688,7 @@ const DestinationSection = () => {
               </Input>
               {fromDropdown && (
                 <DropdownMenu>
-                  {locations.map((location) => (
+                  {['London', 'Dubai', 'New York'].map((location) => (
                     <DropdownItem
                       key={location}
                       onClick={() => handleLocationSelect(location, true)}
@@ -494,7 +710,7 @@ const DestinationSection = () => {
               </Input>
               {toDropdown && (
                 <DropdownMenu>
-                  {locations.map((location) => (
+                  {getToLocations(fromLocation).map((location) => (
                     <DropdownItem
                       key={location}
                       onClick={() => handleLocationSelect(location, false)}
@@ -509,27 +725,30 @@ const DestinationSection = () => {
         </LocationGroup>
         
         <InputGroup>
-          <Label>Date</Label>
+          <Label>Month</Label>
           <InputWrapper>
             <Input onClick={() => setCalendarOpen(!calendarOpen)}>
-              <span>{selectedDate || 'Select date'}</span>
-              <img src={calendar} alt="Select date" />
+              <span>{selectedMonth || 'Select month'}</span>
+              <img src={calendar} alt="Select month" />
             </Input>
             {calendarOpen && (
               <CalendarDropdown>
                 <Calendar>
-                  <div className="calendar-header">March 2025</div>
-                  <div className="calendar-grid">
-                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-                      <div key={index} className="day">{day}</div>
-                    ))}
-                    {Array.from({ length: 31 }, (_, i) => (
+                  <div className="calendar-header">
+                    <button onClick={() => handleYearChange(-1)}>&lt;</button>
+                    <span>{currentYear}</span>
+                    <button onClick={() => handleYearChange(1)}>&gt;</button>
+                  </div>
+                  <div className="month-grid">
+                    {months.map((month) => (
                       <div 
-                        key={i}
-                        className={`day ${i + 1 === 7 ? 'available' : ''} ${selectedDate && i + 1 === 7 ? 'selected' : ''}`}
-                        onClick={i + 1 === 7 ? handleDateSelect : undefined}
+                        key={month}
+                        className={`month ${
+                          isMonthAvailable(month) ? 'available' : ''
+                        } ${selectedMonth === `${month} ${currentYear}` ? 'selected' : ''}`}
+                        onClick={() => handleMonthSelect(month)}
                       >
-                        {i + 1}
+                        {month}
                       </div>
                     ))}
                   </div>
@@ -539,7 +758,7 @@ const DestinationSection = () => {
           </InputWrapper>
         </InputGroup>
         
-        <SearchButton>
+        <SearchButton onClick={resetFilters}>
           <img src={searchIcon} alt="Search flights" />
         </SearchButton>
       </SearchForm>
@@ -547,35 +766,78 @@ const DestinationSection = () => {
       <FlightsSection>
         <FlightsTitle>Upcoming Flights</FlightsTitle>
         <FlightCards>
-          {[1, 2, 3, 4].map((_, index) => (
-            <FlightCard key={index}>
-              <FlightInfo>
-                <TimeLocation>
-                  <Time>06:00</Time>
-                  <Location>LGW</Location>
-                </TimeLocation>
+          {loading ? (
+            <div>Loading flights...</div>
+          ) : error ? (
+            <div>{error}</div>
+          ) : filteredFlights.length === 0 ? (
+            <div>No flights available for the selected filters</div>
+          ) : (
+            displayedFlights.map((flight) => (
+              <FlightCard 
+                key={flight.id}
+                onClick={() => handleFlightClick(flight.id)}
+              >
+                <FlightInfo>
+                  <Day>{flight.acf.date}</Day>
+                  <FlightRow>
+                    <TimeLocation>
+                      <Time>{flight.acf.from_time}</Time>
+                      <Location>{flight.acf.from_destination}</Location>
+                    </TimeLocation>
+                    
+                    <FlightPath>
+                      <img className="airplane" src={airplane} alt="Flight path" />
+                      <img className="destination" src={destination} alt="Destination" />
+                    </FlightPath>
+                    
+                    <TimeLocation>
+                      <Time>{flight.acf.to_time}</Time>
+                      <Location>{flight.acf.to_destination}</Location>
+                    </TimeLocation>
+                  </FlightRow>
+                </FlightInfo>
                 
-                <FlightPath>
-                  <img className="airplane" src={airplane} alt="Flight path" />
-                  <img className="destination" src={destination} alt="Destination" />
-                </FlightPath>
-                
-                <TimeLocation>
-                  <Time>08:15</Time>
-                  <Location>DXB</Location>
-                </TimeLocation>
-              </FlightInfo>
-              
-              <FlightDetails>
-                <span>Duration: 01d 18h 05m</span>
-                <span>2 Stop: Istanbul (IST) & Mumbai (BOB)</span>
-              </FlightDetails>
-            </FlightCard>
-          ))}
+                <FlightDetails>
+                  <span>Duration: {flight.acf.duration}</span>
+                  <span>Price: ${formatPrice(flight.acf.price)}</span>
+                </FlightDetails>
+                <FlightDetails>
+                  <span>{flight.acf.flight_stops}</span>
+                  {parseInt(flight.acf.remaining_tickets) < 6 && (
+                    <span>Seats available: {flight.acf.remaining_tickets}</span>
+                  )}
+                </FlightDetails>
+
+                <BookFlightButton 
+                  show={selectedFlightId === flight.id}
+                  onClick={(e) => handleBooking(flight, e)}
+                >
+                  Book This Flight
+                </BookFlightButton>
+              </FlightCard>
+            ))
+          )}
         </FlightCards>
         
-        <PlanTripButton>Plan Your Trip</PlanTripButton>
+        {hasMoreFlights && (
+          <PlanTripButton onClick={handleShowMore}>
+            Show More
+          </PlanTripButton>
+        )}
       </FlightsSection>
+
+      {showBookingPopup && selectedFlight && (
+        <Portal>
+          <BookingPopup 
+            flight={selectedFlight} 
+            onClose={() => {
+              setShowBookingPopup(false);
+              setSelectedFlight(null);
+            }}
+          />
+        </Portal>
+      )}
     </Section>
   );
 };

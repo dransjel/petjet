@@ -130,7 +130,7 @@ const MobileMenu = styled.div`
   flex-direction: column;
   padding: 20px;
   gap: 20px;
-  z-index: 1000;
+  z-index: 900;
   width: 100vw;
   max-width: 100%;
   box-sizing: border-box;
@@ -166,6 +166,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isOnFAQ = location.pathname === '/faq';
+  const isOnNews = location.pathname === '/news';
   const isOnContact = location.pathname === '/contact';
 
   const handleNavigation = (path) => {
@@ -174,8 +175,8 @@ const Navbar = () => {
   };
 
   const getLogoSrc = () => {
-    if (isOnContact) return logoContact;
-    if (isOnFAQ) return logoBottom;
+    if (isOnContact || isOnNews) return logoContact;
+    if (isOnFAQ ) return logoBottom;
     return logo;
   };
 
@@ -188,6 +189,7 @@ const Navbar = () => {
       <DesktopNav>
         <NavLinks $isOnFAQ={isOnFAQ}>
           <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
+          <span className="clickable" onClick={() => handleNavigation('/news')}>News</span>
           <span className="clickable" onClick={() => handleNavigation('/contact')}>Contact Us</span>
         </NavLinks>
       </DesktopNav>
@@ -200,6 +202,7 @@ const Navbar = () => {
         </MenuIcon>
         <MobileMenu $isOpen={isMenuOpen}>
           <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
+          <span className="clickable" onClick={() => handleNavigation('/news')}>News</span>
           <span className="clickable" onClick={() => handleNavigation('/contact')}>Contact Us</span>
           <BookNowButton onClick={() => handleNavigation('/booking')}>Book Now</BookNowButton>
         </MobileMenu>

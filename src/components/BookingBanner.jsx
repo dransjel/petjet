@@ -128,7 +128,7 @@ const BookingBanner = () => {
         </Subtitle>
       </ContentWrapper>
       <DecorativeShape className="bottom" />
-      <QuoteButton onClick={handleQuoteClick}>Get a Quote</QuoteButton>
+      <QuoteButton onClick={handleQuoteClick}>Book Now</QuoteButton>
     </BannerContainer>
   );
 };
