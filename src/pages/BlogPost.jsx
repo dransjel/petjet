@@ -92,7 +92,7 @@ const HeroImageSection = styled.div`
     height: 300px;
     width: 100%;
     order: 2;
-    margin-top: -450px;
+    margin-top: -250px;
   }
 `;
 
