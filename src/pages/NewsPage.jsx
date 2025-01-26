@@ -26,7 +26,7 @@ const HeroFrame = styled.div`
   margin-bottom: -800px;
 
   ${devices.mobile} {
-    height: 93vh;
+    height: 115vh;
     margin-bottom: 0;
   }
 `;

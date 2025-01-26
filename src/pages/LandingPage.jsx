@@ -33,7 +33,7 @@ const HeroFrame = styled.div`
   margin-bottom: -800px;
 
   ${devices.mobile} {
-    height: 120vh;
+    height: 115vh;
     width: 100vw;
     max-width: 100%;
     position: relative;
