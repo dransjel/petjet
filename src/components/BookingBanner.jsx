@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { devices } from '../styles/breakpoints';
 
 const BannerContainer = styled.div`
@@ -111,6 +112,12 @@ const QuoteButton = styled.button`
 `;
 
 const BookingBanner = () => {
+  const navigate = useNavigate();
+
+  const handleQuoteClick = () => {
+    navigate('/booking');
+  };
+
   return (
     <BannerContainer>
       <DecorativeShape className="top" />
@@ -121,7 +128,7 @@ const BookingBanner = () => {
         </Subtitle>
       </ContentWrapper>
       <DecorativeShape className="bottom" />
-      <QuoteButton>Get a Quote</QuoteButton>
+      <QuoteButton onClick={handleQuoteClick}>Get a Quote</QuoteButton>
     </BannerContainer>
   );
 };

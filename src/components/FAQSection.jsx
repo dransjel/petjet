@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { devices } from '../styles/breakpoints';
+import parse from 'html-react-parser'; // Import the parser
 
 const Section = styled.div`
   width: 100%;
@@ -123,7 +124,7 @@ const FAQSection = () => {
         // Transform the data to match our format
         const transformedFaqs = data.map(faq => ({
           id: faq.id,
-          question: faq.title.rendered,
+          question: parse(faq.title.rendered),
           answer: faq.content.rendered,
           category: categoryMap[faq.faq_type[0]] || 'Other'
         }));

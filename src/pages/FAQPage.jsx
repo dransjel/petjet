@@ -7,6 +7,7 @@ import FAQSection from '../components/FAQSection';
 import faqDog from '../assets/images/faq-dog.png';
 import FAQMobile from '../assets/images/faq-dog_mobile.png';
 import { useNavigate } from 'react-router-dom';
+import BookingBanner from '../components/BookingBanner';
 
 const PageContainer = styled.div`
   width: 100vw;
@@ -173,6 +174,7 @@ const FAQPage = () => {
         </HeroFrame>
         <ContentWrapper>
           <FAQSection />
+          <BookingBanner />
         </ContentWrapper>
       </PageContainer>
     </Layout>
