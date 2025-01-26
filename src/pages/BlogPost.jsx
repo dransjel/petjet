@@ -46,6 +46,63 @@ const HeroBanner = styled.div`
   }
 `;
 
+const HeroContent = styled.div`
+  display: flex;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 100px;
+  align-items: center;
+  gap: 60px;
+
+  ${devices.mobile} {
+    flex-direction: column;
+    padding: 20px;
+    gap: 0px;
+    align-items: bottom;
+    margin-top: 80px;
+  }
+`;
+
+const HeroTextSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  max-width: 515px;
+  order: 1;
+
+  ${devices.mobile} {
+    text-align: center;
+    align-items: center;
+    order: 1;
+    max-width: 100%;
+    margin-bottom: 0px;
+  }
+`;
+
+const HeroImageSection = styled.div`
+  flex: 1;
+  height: 500px;
+  border-radius: 24px;
+  overflow: hidden;
+  order: 2;
+
+  ${devices.mobile} {
+    height: 300px;
+    width: 100%;
+    order: 2;
+    margin-top: -450px;
+  }
+`;
+
+const HeroImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+`;
+
 const SectionText = styled.div`
   position: absolute;
   left: 100px;
@@ -62,7 +119,7 @@ const SectionText = styled.div`
     padding: 0 20px;
     text-align: center;
     align-items: center;
-    margin-top: 120px;
+    margin-top: 30px;
     box-sizing: border-box;
   }
 `;
@@ -165,7 +222,7 @@ const BlogTitle = styled.h1`
   font-family: 'Lato', sans-serif;
   font-size: 48px;
   line-height: 1.2;
-  margin-bottom: 24px;
+  margin: 0;
 
   ${devices.mobile} {
     font-size: 36px;
@@ -176,7 +233,6 @@ const BlogDate = styled.div`
   color: rgb(239, 103, 74);
   font-size: 14px;
   font-weight: 700;
-  margin-bottom: 40px;
 `;
 
 const BlogText = styled.div`
@@ -246,27 +302,18 @@ const BlogPost = () => {
       <PageContainer>
         <Navbar />
         <HeroFrame>
-          <HeroBanner $backgroundImage={newsDog} />
-          <SectionText>
-            <TextFrame>
-              <MainHeadline>Latest News</MainHeadline>
-              <Paragraph>
-                Stay updated with the latest news and updates from PetJet Express.
-                {'\n\n'}
-                Read all about it ..
-              </Paragraph>
-            </TextFrame>
-            <NewsHeroImage />
-            <CallbackButton onClick={handleCallbackClick}>
-              Let's Discuss
-            </CallbackButton>
-          </SectionText>
+          <HeroContent>
+            <HeroTextSection>
+              <BlogTitle>{post.title}</BlogTitle>
+              <BlogDate>{post.date}</BlogDate>
+            </HeroTextSection>
+            <HeroImageSection>
+              <HeroImage src={post.image} alt={post.title} />
+            </HeroImageSection>
+          </HeroContent>
         </HeroFrame>
         <ContentWrapper>
           <BlogContent>
-            <BlogImage src={post.image} alt={post.title} />
-            <BlogTitle>{post.title}</BlogTitle>
-            <BlogDate>{post.date}</BlogDate>
             <BlogText dangerouslySetInnerHTML={{ __html: post.content }} />
           </BlogContent>
           <BookingBanner />
