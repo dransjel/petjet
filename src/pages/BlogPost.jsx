@@ -22,7 +22,6 @@ const BlogContent = styled.div`
   max-width: 800px;
   margin: 80px auto;
   padding: 0 20px;
-  padding-top: 100px;
 `;
 
 const BlogImage = styled.img`
