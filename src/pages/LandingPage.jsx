@@ -179,7 +179,7 @@ const BookNowButton = styled.button`
 
   ${devices.mobile} {
     margin-top: 20px;
-    margin-bottom: 0px;
+    margin-bottom: 20px;
   }
 `;
 

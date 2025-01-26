@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../styles/colors';
 import verifyIcon from '../assets/icons/verify.svg';
@@ -5,6 +6,8 @@ import profileIcon from '../assets/icons/profile.svg';
 import starIcon from '../assets/icons/star.svg';
 import petIcon from '../assets/icons/pet.svg';
 import globalIcon from '../assets/icons/global.svg';
+import { useNavigate } from 'react-router-dom';
+import { devices } from '../styles/breakpoints';
 
 const Section = styled.section`
   width: 100%;
@@ -53,19 +56,25 @@ const Title = styled.h2`
   }
 `;
 
-const BookNowButton = styled.button` 
-  background: ${colors.coral};
-  color: white;
-  padding: 16px 40px;
+const BookNowButton = styled.button`
+  padding: 16px 28px;
+  background: #EF674A;
   border-radius: 8px;
   border: none;
-  font-weight: 700;
-  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  display: inline-flex;
   cursor: pointer;
+  
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  word-wrap: break-word;
 
-  @media (max-width: 768px) {
-    padding: 12px 22px;
-    font-size: 14px;
+  &:hover {
+    background: #d55b42;
   }
 `;
 
@@ -156,6 +165,12 @@ const CardDescription = styled.p`
 `;
 
 const ReasonsPetJet = () => {
+  const navigate = useNavigate();
+
+  const handleBookNowClick = () => {
+    navigate('/booking');
+  };
+
   const reasons = [
     {
       icon: verifyIcon,
@@ -191,7 +206,9 @@ const ReasonsPetJet = () => {
           Why <span className="highlight">Choose</span><br />
           Pet Jet Express
         </Title>
-        <BookNowButton>Book Now</BookNowButton>
+        <BookNowButton onClick={handleBookNowClick}>
+          Book Now
+        </BookNowButton>
       </Header>
       
       <CardsContainer>

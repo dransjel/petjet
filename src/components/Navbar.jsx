@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { devices } from '../styles/breakpoints';
 import logo from '../assets/images/logo.svg';
 import logoBottom from '../assets/icons/logo_bottom.svg';
+import logoContact from '../assets/images/logo_contact.svg';
 import menuIcon from '../assets/icons/menu.svg';
 import menuBlackIcon from '../assets/icons/menu_black.svg';
 
@@ -165,22 +166,29 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isOnFAQ = location.pathname === '/faq';
+  const isOnContact = location.pathname === '/contact';
 
   const handleNavigation = (path) => {
     navigate(path);
     setIsMenuOpen(false);
   };
 
+  const getLogoSrc = () => {
+    if (isOnContact) return logoContact;
+    if (isOnFAQ) return logoBottom;
+    return logo;
+  };
+
   return (
     <NavContainer $isBookingPage={location.pathname === '/booking'}>
       <LogoContainer onClick={() => handleNavigation('/')}>
-        <Logo src={isOnFAQ ? logoBottom : logo} alt="Pet Jet Express" />
+        <Logo src={getLogoSrc()} alt="Pet Jet Express" />
       </LogoContainer>
 
       <DesktopNav>
         <NavLinks $isOnFAQ={isOnFAQ}>
           <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
-          <span className="disabled">Contact Us</span>
+          <span className="clickable" onClick={() => handleNavigation('/contact')}>Contact Us</span>
         </NavLinks>
       </DesktopNav>
 
@@ -188,11 +196,11 @@ const Navbar = () => {
 
       <MobileNav>
         <MenuIcon onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <img src={isOnFAQ ? menuBlackIcon : menuIcon} alt="Menu" />
+          <img src={isOnFAQ || isOnContact ? menuBlackIcon : menuIcon} alt="Menu" />
         </MenuIcon>
         <MobileMenu $isOpen={isMenuOpen}>
           <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
-          <span className="disabled">Contact Us</span>
+          <span className="clickable" onClick={() => handleNavigation('/contact')}>Contact Us</span>
           <BookNowButton onClick={() => handleNavigation('/booking')}>Book Now</BookNowButton>
         </MobileMenu>
       </MobileNav>
