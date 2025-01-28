@@ -42,7 +42,7 @@ const DesktopNav = styled.div`
 const NavLinks = styled.div`
   display: flex;
   gap: 45px;
-  color: ${props => props.$isOnFAQ ? 'rgb(0, 37, 46)' : 'white'};
+  color: ${props => props.$darkLinks ? 'rgb(0, 37, 46)' : 'white'};
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -168,6 +168,7 @@ const Navbar = () => {
   const isOnFAQ = location.pathname === '/faq';
   const isOnNews = location.pathname === '/news';
   const isOnContact = location.pathname === '/contact';
+  const isOnBookingDetails = location.pathname.startsWith('/booking/');
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -175,8 +176,8 @@ const Navbar = () => {
   };
 
   const getLogoSrc = () => {
-    if (isOnContact || isOnNews) return logoContact;
-    if (isOnFAQ ) return logoBottom;
+    if (isOnContact || isOnNews ) return logoContact;
+    if (isOnFAQ || isOnBookingDetails) return logoBottom;
     return logo;
   };
 
@@ -187,7 +188,7 @@ const Navbar = () => {
       </LogoContainer>
 
       <DesktopNav>
-        <NavLinks $isOnFAQ={isOnFAQ}>
+        <NavLinks $darkLinks={isOnFAQ || isOnBookingDetails}>
           <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>
           <span className="clickable" onClick={() => handleNavigation('/news')}>News</span>
           <span className="clickable" onClick={() => handleNavigation('/contact')}>Contact Us</span>
@@ -198,7 +199,10 @@ const Navbar = () => {
 
       <MobileNav>
         <MenuIcon onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <img src={isOnFAQ || isOnContact ? menuBlackIcon : menuIcon} alt="Menu" />
+          <img 
+            src={isOnFAQ || isOnContact || isOnBookingDetails ? menuBlackIcon : menuIcon} 
+            alt="Menu" 
+          />
         </MenuIcon>
         <MobileMenu $isOpen={isMenuOpen}>
           <span className="clickable" onClick={() => handleNavigation('/faq')}>FAQs</span>

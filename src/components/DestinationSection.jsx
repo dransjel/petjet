@@ -6,8 +6,7 @@ import airplane from '../assets/images/airplane.svg';
 import destination from '../assets/images/Destination.png';
 import searchIcon from '../assets/images/search-normal.svg';
 import { devices } from '../styles/breakpoints';
-import Portal from './Portal';
-import BookingPopup from './BookingPopup';
+import { useNavigate } from 'react-router-dom';
 
 const Section = styled.section`
   position: relative;
@@ -481,6 +480,7 @@ const BookFlightButton = styled.button`
 `;
 
 const DestinationSection = () => {
+  const navigate = useNavigate();
   const [fromDropdown, setFromDropdown] = useState(false);
   const [toDropdown, setToDropdown] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -493,8 +493,6 @@ const DestinationSection = () => {
   const [error, setError] = useState(null);
   const [displayCount, setDisplayCount] = useState(4);
   const [selectedFlightId, setSelectedFlightId] = useState(null);
-  const [showBookingPopup, setShowBookingPopup] = useState(false);
-  const [selectedFlight, setSelectedFlight] = useState(null);
 
   const locations = ['London', 'Dubai', 'New York'];
   const availableMonths = ['March', 'April', 'May', 'June'];
@@ -661,8 +659,10 @@ const DestinationSection = () => {
   const handleBooking = (flight, e) => {
     e.preventDefault(); // Prevent any default behavior
     e.stopPropagation(); // Stop event bubbling
-    setSelectedFlight(flight);
-    setShowBookingPopup(true);
+    
+    // Convert flight title to URL-friendly format and navigate
+    const urlTitle = flight.title.rendered.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/booking/${urlTitle}`, { state: { flightDetails: flight } });
   };
 
   return (
@@ -826,18 +826,6 @@ const DestinationSection = () => {
           </PlanTripButton>
         )}
       </FlightsSection>
-
-      {showBookingPopup && selectedFlight && (
-        <Portal>
-          <BookingPopup 
-            flight={selectedFlight} 
-            onClose={() => {
-              setShowBookingPopup(false);
-              setSelectedFlight(null);
-            }}
-          />
-        </Portal>
-      )}
     </Section>
   );
 };

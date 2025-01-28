@@ -6,6 +6,7 @@ import BookingPage from './pages/BookingPage';
 import ContactPage from './pages/ContactPage';
 import NewsPage from './pages/NewsPage';
 import BlogPost from './pages/BlogPost';
+import BookingDetailsPage from './pages/BookingDetailsPage';
 import { GlobalStyles } from './styles/GlobalStyles';
 import Footer from './components/Footer';
 
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:link" element={<BlogPost />} />
+          <Route path="/booking/:title" element={<BookingDetailsPage />} />
         </Routes>
       </Router>
       <Footer />
